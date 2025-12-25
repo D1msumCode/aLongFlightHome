@@ -1,24 +1,23 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-public class Game extends JPanel implements Runnable, KeyListener {
+public class Game extends JPanel {
 
-    private Bird player;
+    private final Bird player;
 
-    boolean upPressed;
-    boolean downPressed;
-
-    public Game(){
-        setBackground(new Color(0xC6FCFF));
+    public Game() {
+        setBackground(new Color(0x82C8E5));
 
         setFocusable(true);
         requestFocusInWindow();
-        addKeyListener(this);
 
-        player = new Bird(400,300, 10);
-        new Thread(this).start();
+        player = new Bird(75, 300, 10);
+
+        MainRunner mainRunner = new MainRunner(player, this);
+        addKeyListener(mainRunner);
+
+        new Thread(mainRunner).start();
+        repaint();
     }
 
     public static void main(String[] args) {
@@ -33,48 +32,5 @@ public class Game extends JPanel implements Runnable, KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         player.draw(g);
-    }
-
-    @Override
-    public void run() {
-        while (true) {
-            if (upPressed) {
-                player.fly();
-            }
-            if (downPressed) {
-            }
-
-            player.update();
-
-            repaint();
-            try {
-                Thread.sleep(16);
-            } catch (InterruptedException e) {
-
-            }
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP){
-            upPressed = true;
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP){
-            upPressed = false;
-        }
     }
 }
